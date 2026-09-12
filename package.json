@@ -1,0 +1,156 @@
+{
+  "name": "token-police",
+  "version": "1.0.0",
+  "description": "TokenPolice Node.js SDK — Budget enforcement and real-time blocking for LLM applications.",
+  "author": "TokenPolice <hello@tokenpolice.ai>",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "llm",
+    "budget",
+    "enforcement",
+    "token",
+    "openai",
+    "anthropic",
+    "opentelemetry",
+    "tokenpolice",
+    "firewall",
+    "cost-control",
+    "ai"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tokenpolice/token-police-node"
+  },
+  "bugs": {
+    "url": "https://github.com/tokenpolice/token-police-node/issues",
+    "email": "support@tokenpolice.ai"
+  },
+  "homepage": "https://tokenpolice.ai",
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/sdk-trace-base": "^2.11.0"
+  },
+  "optionalDependencies": {
+    "@traceloop/instrumentation-anthropic": ">=0.26.0 <0.28.0",
+    "@traceloop/instrumentation-openai": ">=0.26.0 <0.28.0"
+  },
+  "peerDependencies": {
+    "@ai-sdk/anthropic": ">=2.0.0",
+    "@ai-sdk/gateway": ">=1.0.0",
+    "@ai-sdk/google": ">=2.0.0",
+    "@ai-sdk/groq": ">=2.0.0",
+    "@ai-sdk/mistral": ">=2.0.0",
+    "@ai-sdk/openai": ">=2.0.0",
+    "@ai-sdk/openai-compatible": ">=1.0.0",
+    "@ai-sdk/xai": ">=3.0.0",
+    "@llamaindex/anthropic": ">=0.3.0",
+    "@llamaindex/google": ">=0.4.0",
+    "@llamaindex/openai": ">=0.4.0",
+    "@openai/agents": ">=0.0.1",
+    "ai": ">=5.0.0",
+    "openai": ">=6.0.0",
+    "voyageai": ">=0.4.0"
+  },
+  "peerDependenciesMeta": {
+    "openai": {
+      "optional": true
+    },
+    "@llamaindex/openai": {
+      "optional": true
+    },
+    "@llamaindex/anthropic": {
+      "optional": true
+    },
+    "@llamaindex/google": {
+      "optional": true
+    },
+    "@openai/agents": {
+      "optional": true
+    },
+    "@ai-sdk/xai": {
+      "optional": true
+    },
+    "@ai-sdk/openai": {
+      "optional": true
+    },
+    "@ai-sdk/anthropic": {
+      "optional": true
+    },
+    "@ai-sdk/google": {
+      "optional": true
+    },
+    "@ai-sdk/mistral": {
+      "optional": true
+    },
+    "@ai-sdk/groq": {
+      "optional": true
+    },
+    "@ai-sdk/gateway": {
+      "optional": true
+    },
+    "@ai-sdk/openai-compatible": {
+      "optional": true
+    },
+    "ai": {
+      "optional": true
+    },
+    "voyageai": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@ai-sdk/anthropic": ">=2.0.0",
+    "@ai-sdk/openai": ">=2.0.0",
+    "@anthropic-ai/sdk": ">=0.30.0",
+    "@google/genai": ">=1.0.0",
+    "@huggingface/inference": ">=4.13.21",
+    "@llamaindex/openai": ">=0.4.0",
+    "@mistralai/mistralai": ">=2.3.0",
+    "@openai/agents": ">=0.0.1",
+    "@openrouter/sdk": ">=1.0.0",
+    "@types/node": "^20.0.0",
+    "ai": ">=5.0.0",
+    "cohere-ai": ">=8.0.0",
+    "dotenv": "^17.4.2",
+    "openai": ">=6.0.0",
+    "together-ai": ">=0.20.0",
+    "tsup": "^8.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.5.0",
+    "vitest": "^3.2.6",
+    "voyageai": ">=0.4.0"
+  }
+}
