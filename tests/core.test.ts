@@ -38,8 +38,18 @@ describe("TokenPolice Client", () => {
   });
 
   it("should default baseUrl to https://collect.tokenpolice.ai", () => {
-    const client = new TokenPolice({ apiKey: "tp_sk_test123" });
-    expect(client.baseUrl).toBe("https://collect.tokenpolice.ai");
+    // This asserts the HARDCODED fallback, which only applies when the env var
+    // is unset — and tests/setup.ts sets it for every test so nothing reaches a
+    // real collector. Clear it just here so the fallback is what gets measured.
+    const saved = process.env.TOKENPOLICE_BASE_URL;
+    delete process.env.TOKENPOLICE_BASE_URL;
+    try {
+      const client = new TokenPolice({ apiKey: "tp_sk_test123" });
+      expect(client.baseUrl).toBe("https://collect.tokenpolice.ai");
+    } finally {
+      if (saved === undefined) delete process.env.TOKENPOLICE_BASE_URL;
+      else process.env.TOKENPOLICE_BASE_URL = saved;
+    }
   });
 
   it("should strip trailing slash from baseUrl", () => {
