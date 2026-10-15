@@ -19,7 +19,7 @@ import { StreamClient } from "./stream";
 import { spanKindFor } from "./spanKind";
 import { randomHex16 } from "./context";
 
-export const SDK_VERSION = "1.0.0";
+export const SDK_VERSION = "1.0.1";
 export const SDK_SCHEMA_VERSION = "1";
 
 /**

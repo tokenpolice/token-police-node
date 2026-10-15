@@ -160,6 +160,25 @@ const LANGCHAIN_OPT_IN_WARN_KEY = "langChain:manual-opt-in";
 // traceloop.span.kind="tool" → Python LangChain, older LlamaIndex
 // openinference.span.kind="TOOL" → Arize-instrumented apps
 // name "execute_tool <tool>" / "<tool>.tool" → last-resort name heuristic
+// The @anthropic-ai/sdk's own tracer (>=0.134.0). It is on by default and opens
+// a gen_ai.* CLIENT span for every API call, stream and tool run as soon as a
+// tracer provider is registered — ours always is. The anthropic instrumentor
+// already emits the priced span for the same call, so a native span here is a
+// duplicate row (exactly 2x cost). Scope is "com.anthropic.sdk.typescript", or
+// that name plus ".<platform>" for the Bedrock/Vertex/Foundry clients.
+const ANTHROPIC_NATIVE_SCOPE = "com.anthropic.sdk";
+
+function isAnthropicNativeSpan(span: unknown): boolean {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const s = span as any;
+    const name = s?.instrumentationScope?.name ?? s?.instrumentationLibrary?.name;
+    return typeof name === "string" && name.startsWith(ANTHROPIC_NATIVE_SCOPE);
+  } catch {
+    return false;
+  }
+}
+
 function isToolSpan(attrs: Record<string, unknown>, name: string): boolean {
   try {
     if (attrs["gen_ai.operation.name"] === "execute_tool") return true;
@@ -974,6 +993,14 @@ export class TokenPoliceSpanProcessor implements SpanProcessor {
     // the natural terminator when a kept LLM/tool child hops over dropped
     // LangChain/LangGraph framework ancestors in onEnd. (See _spanParent.)
     _recordSpanParent(span);
+    // The anthropic SDK's native span duplicates the instrumentor's (see
+    // isAnthropicNativeSpan). Its parent link is recorded just above and it is
+    // never emitted, so an instrumentor span nested under it hops over it to
+    // the real ancestor. Returned before the tool branch — its tool-run spans
+    // are duplicates too — so it consumes no span_order; onEnd drops it.
+    if (isAnthropicNativeSpan(span)) {
+      return;
+    }
     // LangChain's OpenLLMetry instrumentor emits framework spans (chains,
     // agents, tools) alongside the LLM spans. Skip enriching/counting those:
     // only LLM spans are logged in onEnd, and counting framework spans would
@@ -1138,6 +1165,13 @@ export class TokenPoliceSpanProcessor implements SpanProcessor {
       // They carry native W3C trace/span ids and parent onto the enclosing span.
       if (attrs["tp.kind"] === "agent" || attrs["tp.kind"] === "chain") {
         this._logStructuralSpan(span, attrs, String(attrs["tp.kind"]));
+        return;
+      }
+
+      // The anthropic SDK's native span — a duplicate of the instrumentor's
+      // (see isAnthropicNativeSpan). Dropped before the tool branch: its
+      // tool-run spans are duplicates too.
+      if (isAnthropicNativeSpan(span)) {
         return;
       }
 

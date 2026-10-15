@@ -1,6 +1,6 @@
 {
   "name": "token-police",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TokenPolice Node.js SDK — Budget enforcement and real-time blocking for LLM applications.",
   "author": "TokenPolice <hello@tokenpolice.ai>",
   "license": "Apache-2.0",
